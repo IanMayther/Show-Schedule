@@ -1,6 +1,23 @@
 '''Each Model class will correspond to a table in the database'''
 import os
 import peewee as pw
+import logging
+from datetime import date
+
+LOG_FORMAT = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
+
+today = date.today()
+log_name = today.strftime("%m_%d_%Y")
+
+formatter = logging.Formatter(LOG_FORMAT)
+
+file_handler = logging.FileHandler('log_' + log_name + '.log')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(formatter)
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
 
 FILE_NAME = 'Install_Calendar.db'
 
@@ -126,10 +143,10 @@ def main():
                     Department = person[4]
                 )
                 new_employee.save()
+                logging.info("Employee: %s created", person[1])
 
-        except pw.IntegrityError as no_good:
-            print('Failed to add employee: ' + person[1])
-            print(no_good)
+        except pw.IntegrityError:
+            logging.error("Failed to create Employee: %s", person[1])
 
     installers = fill_installers(employees)
 
@@ -141,10 +158,9 @@ def main():
                     InstallerName = installer[1]
                 )
                 new_installer.save()
-
-        except pw.IntegrityError as no_good:
-            print('Failed to add installer: ' + installer[1])
-            print(no_good)
+                logging.info("Installer Resource: %s created", installer[0])
+        except pw.IntegrityError:
+                logging.error("Failed to create Install Resource: %s", installer[0])
 
     for job in JobBacklog:
         try:
@@ -155,10 +171,9 @@ def main():
                     DueDateOverride = job[2]
                 )
                 new_job.save()
-
-        except pw.IntegrityError as no_good:
-            print('Failed to add Job: ' + job[0])
-            print(no_good)
+                logging.info("JobOper #: %s created", job[0])
+        except pw.IntegrityError:
+            logging.error("Failed to create JobOper #: %s", job[0])
 
     db.close()
 
