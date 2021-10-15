@@ -119,7 +119,7 @@ def fill_installers(input_list):
 
     return output_list
 
-def main():
+def db_create():
     '''Creates tables from classes'''
 
     db.connect()
@@ -130,6 +130,10 @@ def main():
         JobOper,
     ])
 
+    db.close()
+
+def main():
+    '''Populates tables'''
     employees = fill_employees(employee_names)
 
     for person in employees:
@@ -177,5 +181,12 @@ def main():
 
     db.close()
 
+def db_delete():
+    '''Deletes tables'''
+    db.close()
+    if os.path.exists(FILE_NAME):
+        os.remove(FILE_NAME)
+
 if __name__ == "__main__":
+    db_create()
     main()
