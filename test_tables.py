@@ -21,3 +21,7 @@ class EmployeeTest(TestCase):
         '''Add an employee to the table'''
         emp_table = EC('Install_Calendar.db')
         self.assertTrue(emp_table.add_emp(0,'Ian','Igor',False,'Engineering'))
+        self.assertFalse(emp_table.add_emp(0,'Ian','Igor',False,'Engineering'))
+
+#    def tearDown(self):
+#       db_delete()

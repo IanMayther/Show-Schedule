@@ -49,8 +49,8 @@ class EmployeeCollection():
                         Department = emp_depart
                     )
                     mod_emp.execute()
-                    logging.info('Data updated for Employee: %s', emp_num)
-                    return True
+                logging.info('Data updated for Employee: %s', emp_num)
+                return True
             else:
                 raise pw.IntegrityError
         except pw.IntegrityError:
