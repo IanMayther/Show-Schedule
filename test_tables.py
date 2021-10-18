@@ -35,7 +35,8 @@ class EmployeeTest(TestCase):
     def test_aa_val_input(self):
         '''Test the validity of input info'''
         self.assertTrue(emp_table.validate_input(0,'Ian','Igor',False,'ENG'))
-        self.assertFalse(emp_table.validate_input(0,'IanIanIanIanIanIanIanIanIanIan',
+        self.assertFalse(emp_table.validate_input(1234567,'Ian','Igor',False,'ENG')) 
+        self.assertFalse(emp_table.validate_input(0,'IanIanIanIanIanIanIanIanIanIanI',
                                             'Igor',False,'ENG'))
         self.assertFalse(emp_table.validate_input(0,'Ian', 'IgorIgorIgorIgorIgorIgorIgorIgor',
                                             False,'ENG'))
