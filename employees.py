@@ -2,10 +2,13 @@
 CRUD File for employees
 '''
 
-from os import name
-import table_setup
-import peewee as pw
 import logging
+import peewee as pw
+import table_setup
+
+# pylint: disable=R0913
+# pylint: disable=R0201
+# pylint: disable=E1120
 
 class EmployeeCollection():
     '''
@@ -15,14 +18,14 @@ class EmployeeCollection():
     def __init__(self, employee_database):
         self.database = pw.SqliteDatabase(employee_database)
 
-    def validate_input(self,emp_num, emp_first, emp_last, emp_inactive, emp_depart):
+    def validate_input(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):
         '''Validates if the inputs confirm to table requirements'''
         if (emp_num <= 999999 and len(emp_first) <31 and
             len(emp_last) < 31 and isinstance(emp_inactive, bool) and len(emp_depart) < 11):
             return True
-        
+
         return False
-    
+
     def add_emp(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):
         '''Creating a new employee record'''
         if self.validate_input(emp_num, emp_first, emp_last, emp_inactive, emp_depart):
@@ -45,7 +48,7 @@ class EmployeeCollection():
                 logging.info(pw.IntegrityError)
                 self.database.close()
                 return False
-        
+
         return False
 
     def modify_emp(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):
@@ -66,14 +69,14 @@ class EmployeeCollection():
                     self.database.close()
                     logging.info('Data updated for Employee: %s', emp_num)
                     return True
-                else:
-                    raise pw.IntegrityError
+
+                raise pw.IntegrityError
             except pw.IntegrityError:
                 self.database.close()
                 logging.info('Error updating Employee: %s', emp_num)
                 logging.info(pw.IntegrityError)
                 return False
-        
+
         return False
 
     def delete_emp(self, emp_num):
@@ -88,8 +91,8 @@ class EmployeeCollection():
                 self.database.close()
                 logging.warning('%s was DELETED', emp_num)
                 return True
-            else:
-                raise pw.IntegrityError
+
+            raise pw.IntegrityError
         except pw.IntegrityError:
             logging.info('Error deleting employee: %s', emp_num)
             logging.info(pw.IntegrityError)

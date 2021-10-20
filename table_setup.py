@@ -1,8 +1,11 @@
 '''Each Model class will correspond to a table in the database'''
 import os
-import peewee as pw
 import logging
 from datetime import date
+import peewee as pw
+
+# pylint: disable=R0903
+# pylint: disable=C0200
 
 LOG_FORMAT = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
 
@@ -20,9 +23,6 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(file_handler)
 
 FILE_NAME = 'Install_Calendar.db'
-
-if os.path.exists(FILE_NAME):
-    os.remove(FILE_NAME)
 
 db = pw.SqliteDatabase(FILE_NAME)
 
@@ -86,39 +86,6 @@ class JobOper(BaseModel):
         )
     DueDateOverride = pw.DateField(formats = 'YYYY-MM-DD')
 
-def fill_employees(input_list):
-    '''
-    returns the list of employees that will fill the Employee Table
-    '''
-    output_list = []
-
-    emp_count = 000000
-
-    emp_names = input_list
-
-    for i in range(len(emp_names)):
-        emp_names[i][0] = (emp_count + i)
-        output_list.append(emp_names[i])
-
-    return output_list
-
-def fill_installers(input_list):
-    '''
-    Creates a list of active installers to populate the Installer table
-    '''
-
-    output_list = []
-
-    for i in range(len(input_list)):
-        if input_list[i][3] is False and input_list[i][4] == 'INSTALL':
-            temp_list = [i, input_list[i][0]]
-            output_list.append(temp_list)
-
-    for i in range(len(output_list)):
-        output_list[i][0] = i
-
-    return output_list
-
 def db_create():
     '''Creates tables from classes'''
 
@@ -132,61 +99,8 @@ def db_create():
 
     db.close()
 
-def main():
-    '''Populates tables'''
-    employees = fill_employees(employee_names)
-
-    for person in employees:
-        try:
-            with db.transaction():
-                new_employee = Employee.create(
-                    EmployeeNum = person[0],
-                    FirstName = person[1],
-                    LastName = person[2],
-                    Inactive = person[3],
-                    Department = person[4]
-                )
-                new_employee.save()
-                logging.info("Employee: %s created", person[1])
-
-        except pw.IntegrityError:
-            logging.error("Failed to create Employee: %s", person[1])
-
-    installers = fill_installers(employees)
-
-    for installer in installers:
-        try:
-            with db.transaction():
-                new_installer = Installer.create(
-                    ResourceID = installer[0],
-                    InstallerName = installer[1]
-                )
-                new_installer.save()
-                logging.info("Installer Resource: %s created", installer[0])
-        except pw.IntegrityError:
-                logging.error("Failed to create Install Resource: %s", installer[0])
-
-    for job in JobBacklog:
-        try:
-            with db.transaction():
-                new_job = JobOper.create(
-                    JobNum = job[0],
-                    ResourceID = job[1],
-                    DueDateOverride = job[2]
-                )
-                new_job.save()
-                logging.info("JobOper #: %s created", job[0])
-        except pw.IntegrityError:
-            logging.error("Failed to create JobOper #: %s", job[0])
-
-    db.close()
-
 def db_delete():
     '''Deletes tables'''
     db.close()
     if os.path.exists(FILE_NAME):
         os.remove(FILE_NAME)
-
-if __name__ == "__main__":
-    db_create()
-    main()
