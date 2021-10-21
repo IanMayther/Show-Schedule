@@ -93,12 +93,17 @@ class InstallerTest(TestCase):
 
     def test_af_val_inputs(self):
         '''Validate that the inputs conform to table requirements'''
-        self.assertTrue(IC.validate_input(0,0))
-        self.assertFalse(IC.validate_input(1,1))
+        self.assertTrue(ins_table.validate_input(0))
+        self.assertFalse(ins_table.validate_input(1))
     
     def test_ag_add_ins(self):
         '''Test adding installer to the table'''
-        pass
+        self.assertEqual(ins_table.counter, 0)
+        self.assertTrue(ins_table.add_ins(0))
+        self.assertFalse(ins_table.add_ins(1))
+        self.assertEqual(ins_table.counter, 1)
+        self.assertFalse(ins_table.add_ins(0))
+        self.assertEqual(ins_table.counter, 1)
 
     def tearDown(self):
         '''Delete table'''

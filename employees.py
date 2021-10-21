@@ -17,6 +17,7 @@ class EmployeeCollection():
 
     def __init__(self, employee_database):
         self.database = pw.SqliteDatabase(employee_database)
+#Add Counter for Employee number
 
     def validate_input(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):
         '''Validates if the inputs confirm to table requirements'''
