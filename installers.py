@@ -19,8 +19,6 @@ class InstallerCollection():
         '''Validate that the employee exists conforms to table'''
         self.database.connect(reuse_if_open= True)
 
-        # if (table_setup.Employee.get_or_none(EmployeeNum = emp_num) and not
-        #     table_setup.Installer.get_or_none(InstallerName = emp_num)):
         if table_setup.Employee.get_or_none(EmployeeNum = emp_num):
             self.database.close()
             return True

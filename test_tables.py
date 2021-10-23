@@ -4,15 +4,17 @@ Testing for database functionality for Employees, Resources, JobOper
 
 import os
 from unittest import TestCase
-import table_setup as ts
+
 # from mock import Mock
 # from mock import patch
-
+import table_setup as ts
 from employees import EmployeeCollection as EC
 from installers import InstallerCollection as IC
+from jobs import JobCollection as JC
 
 emp_table = EC('Install_Calendar.db')
 ins_table = IC('Install_Calendar.db')
+job_table = JC('Install_Calendar.db')
 
 class DBTest(TestCase):
     '''Test basic functionality of database'''
@@ -120,4 +122,54 @@ class InstallerTest(TestCase):
 
     def tearDown(self):
         '''Delete table'''
+        ts.db_delete()
+
+class JobTest(TestCase):
+    '''
+    Test functionality of Job Collection with Job Table in table_setup
+    '''
+
+    def setUp(self):
+        '''Set up tables'''
+        ts.db_create()
+        emp_table.add_emp(0,'Tim','Timerson',False,'INSTALL')
+        ins_table.counter = 0
+        ins_table.add_ins(0)
+
+    def test_aj_val_job(self):
+        '''Test the validation of inputs'''
+        self.assertFalse(job_table.validate_input('12345678901', 0, '2021-10-15'))
+        self.assertFalse(job_table.validate_input('123456-1-1', 1, '2021-10-15'))
+        self.assertFalse(job_table.validate_input('123456-1-1', 0, 'boom'))
+        self.assertTrue(job_table.validate_input('123456-1-1', 0, '2021-10-15'))
+
+    def test_ak_add_job(self):
+        '''Test adding a job to the table'''
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
+        self.assertFalse(job_table.add_job('123456-1-1', 0, '2021-10-15'))
+        self.assertFalse(job_table.add_job('123456-1-1', 0, 'boom'))
+
+    def test_al_modify_job(self):
+        '''Test modifying a job due date or resource in the tables'''
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
+        self.assertFalse(job_table.modify_job('123456-1-1', 1, '2021-10-15'))
+        self.assertFalse(job_table.modify_job('123456-1-2', 0, '2021-10-25'))
+        self.assertTrue(job_table.modify_job('123456-1-1', 0, '2021-10-25'))
+        emp_table.add_emp(1, 'Ken', 'Kenerson', False, 'INSTALL')
+        ins_table.add_ins(1)
+        self.assertTrue(job_table.modify_job('123456-1-1', 1, '2021-10-25'))
+
+    def test_am_delete_jobs(self):
+        '''Test deleting a job from the table'''
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
+        self.assertTrue(job_table.delete_job('123456-1-1'))
+        self.assertFalse(job_table.delete_job('123456-1-1'))
+
+    def test_an_searhc_jobs(self):
+        '''Test searching for jobs in the table'''
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
+        self.assertFalse(job_table.search_job('123456-2-1'))
+        self.assertIsInstance(job_table.search_job('123456-1-1'), list)
+
+    def tearDown(self):
         ts.db_delete()
