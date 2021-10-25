@@ -20,15 +20,29 @@ class DBTest(TestCase):
 
     def test_aa_employee_init(self):
         '''Test initalizing employee table'''
-        self.assertIsInstance(main.init_employee_collection(database), employees.EmployeeCollection)
+        main.init_employee_collection(database)
+        self.assertIsInstance(main.existing_employee_db[database], list)
 
     def test_ab_installer_init(self):
         '''Test initalizing installer table'''
-        self.assertIsInstance(main.init_installer_collection(database), installers.InstallerCollection)
+        main.init_installer_collection(database)
+        self.assertIsInstance(main.existing_installer_db[database], list)
 
     def test_ac_job_init(self):
         '''Test initializing job table'''
-        self.assertIsInstance(main.init_job_collection(database), jobs.JobCollection)
+        main.init_job_collection(database)
+        self.assertIsInstance(main.existing_job_db[database], list)
+
+class Emp_Test(TestCase):
+    '''Test Employee functionality of main.py'''
+    def setUp(self):
+        '''Create database for each test'''
+        ts.db_create()
+
+    def test_ad_add_emp(self):
+        '''Test adding employee for '''
+        pass
+
 
 '''
 1- Add an employee
