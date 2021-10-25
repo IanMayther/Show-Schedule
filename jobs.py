@@ -16,6 +16,7 @@ class JobCollection():
 
     def __init__(self, employee_database):
         self.database = pw.SqliteDatabase(employee_database)
+        logging.info("New Job Table Created")
 
     def validate_input(self, job_num, ins_res, due_date):
         '''

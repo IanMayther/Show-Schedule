@@ -14,6 +14,7 @@ class InstallerCollection():
     def __init__(self, employee_database):
         self.database = pw.SqliteDatabase(employee_database)
         self.counter = 0
+        logging.info("New Installer Table Created")
 
     def validate_input(self, emp_num):
         '''Validate that the employee exists conforms to table'''
