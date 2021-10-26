@@ -4,48 +4,36 @@ Module to manage employees, installers, jobs
 
 import csv
 import pathlib
+import logging
 import employees
 import installers
 import jobs
 
-existing_employee_db = {}
-existing_installer_db = {}
-existing_job_db = {}
-
 def init_employee_collection(database):
-    '''
-    Creates a list of functions for a given employee table
-    0 - Add
-    1 - Modify
-    2 - Inactivate
-    3 - Search
-    '''
-    existing_employee_db[database] = [0, 1, 2, 3]
+    '''Initialize an employee collection'''
+    return employees.EmployeeCollection(database)
 
 def init_installer_collection(database):
-    '''
-    Creates a list of functions for a given installer table
-    0 - Add
-    1 - Delete
-    2 - Search
-    '''
-    existing_installer_db[database] = [0, 1, 2]
+    '''Initialize an installer collection'''
+    return installers.InstallerCollection(database)
 
 def init_job_collection(database):
-    '''
-    Creates a list of functions for a give job table
-    0 - Add
-    1 - Search
-    '''
-    existing_job_db[database] = [0, 1]
+    '''Initialize an job collection'''
+    return jobs.JobCollection(database)
 
-def add_employee():
-    pass
+def add_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, collection):
+    '''Add an employee to the collection'''
+    return collection.add_emp(emp_num, emp_first, emp_last, emp_inactive, emp_depart)
 
-def modify_employee():
-    pass
+def modify_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, collection):
+    '''Modify the information for an existing employee, except inactivate'''
+    if emp_inactive is True:
+        logging.info('Error updating Employee: %s, Use inactivate method', emp_num)
+        return False
+    return collection.modify_emp(emp_num, emp_first, emp_last, emp_inactive, emp_depart)
 
 def inactivate_employee():
+    '''Inactivating employee removes them from necessary resource groups ie - install'''
     pass
 
 def search_employee():
@@ -67,8 +55,6 @@ def search_job():
     pass
 
 '''
-1- Add an employee
-2- Modify an employee
 2b- Inactivate employee
 3- Search an employee
 4- Add an installer
