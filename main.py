@@ -45,14 +45,17 @@ def search_employee(emp_num, database):
     '''Searching through employee database for employee row'''
     return database.search_emp(emp_num)
 
-def add_installer():
-    pass
+def add_installer(emp_num, database):
+    '''Adding an employee to the installer table'''
+    return database.add_ins(emp_num)
 
-def delete_installer():
-    pass
+def delete_installer(res_id, database):
+    '''Delete an installer from the installer table'''
+    return database.delete_ins(res_id)
 
-def search_installer():
-    pass
+def search_installer(res_id, database):
+    '''Search for an installer in the installer table'''
+    return database.search_ins(res_id)
 
 def add_job():
     pass
@@ -61,9 +64,6 @@ def search_job():
     pass
 
 '''
-3- Search an employee
-4- Add an installer
-5- Delete an installer
 6- Search an installer
 7- Add a job
 8- Search a job

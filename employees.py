@@ -17,7 +17,7 @@ class EmployeeCollection():
 
     def __init__(self, employee_database):
         self.database = pw.SqliteDatabase(employee_database)
-#Add Counter for Employee number
+        #Add Counter for Employee number
         logging.info("New Employee Table Created")
 
     def validate_input(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):

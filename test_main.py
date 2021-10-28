@@ -73,10 +73,43 @@ class Emp_Test(TestCase):
     def tearDown(self):
         ts.db_delete()
 
+class Ins_Test(TestCase):
+    '''Test Employee functionality of main.py'''
+    def setUp(self):
+        '''Create database for each test'''
+        ts.db_create()
+        main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC)
+        IC.counter = 0
+
+    def test_ah_add_ins(self):
+        '''Test adding an installer to the database'''
+        self.assertTrue(main.add_installer(0, IC))
+        self.assertFalse(main.add_installer(0, IC))
+
+    def test_ai_del_ins(self):
+        '''Test deleting an installer from the install table'''
+        self.assertTrue(main.add_installer(0, IC))
+        self.assertTrue(main.delete_installer(0, IC))
+        self.assertFalse(main.delete_installer(0, IC))
+        self.assertEqual(main.search_employee(0, EC)[0], 0)
+
+    def test_aj_search_ins(self):
+        '''Test searching an installer from the install table'''
+        self.assertTrue(main.add_installer(0, IC))
+        self.assertFalse(main.search_installer(1, IC))
+        self.assertIsInstance(main.search_installer(0, IC), list)
+        results = main.search_installer(0, IC)
+        self.assertEqual(len(results), 4)
+        print(type(results[0]))
+        print(type(results[1]))
+        #self.assertEqual(results[0], 0)
+        #self.assertIsInstance(results[1], employees.EmployeeCollection)
+        self.assertEqual(results[2], 'Ian')
+        self.assertEqual(results[3], 'Ianson')
+
+    def tearDown(self):
+        ts.db_delete()
 '''
-3- Search an employee
-4- Add an installer
-5- Delete an installer
 6- Search an installer
 7- Add a job
 8- Search a job
