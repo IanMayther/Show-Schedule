@@ -9,35 +9,41 @@ import employees
 import installers
 import jobs
 
-def init_employee_collection(database):
-    '''Initialize an employee collection'''
+def init_employee_database(database):
+    '''Initialize an employee database'''
     return employees.EmployeeCollection(database)
 
-def init_installer_collection(database):
-    '''Initialize an installer collection'''
+def init_installer_database(database):
+    '''Initialize an installer database'''
     return installers.InstallerCollection(database)
 
-def init_job_collection(database):
-    '''Initialize an job collection'''
+def init_job_database(database):
+    '''Initialize an job database'''
     return jobs.JobCollection(database)
 
-def add_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, collection):
-    '''Add an employee to the collection'''
-    return collection.add_emp(emp_num, emp_first, emp_last, emp_inactive, emp_depart)
+def add_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, database):
+    '''Add an employee to the database'''
+    return database.add_emp(emp_num, emp_first, emp_last, emp_inactive, emp_depart)
 
-def modify_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, collection):
+def modify_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, database):
     '''Modify the information for an existing employee, except inactivate'''
     if emp_inactive is True:
         logging.info('Error updating Employee: %s, Use inactivate method', emp_num)
         return False
-    return collection.modify_emp(emp_num, emp_first, emp_last, emp_inactive, emp_depart)
+    return database.modify_emp(emp_num, emp_first, emp_last, emp_inactive, emp_depart)
 
-def inactivate_employee():
+def inactivate_employee(emp_num, database):
     '''Inactivating employee removes them from necessary resource groups ie - install'''
-    pass
+    emp_details = database.search_emp(emp_num)
+    if isinstance(emp_details, bool) or emp_details[3] is True:
+        logging.info('Error inactivating Employee: %s', emp_num)
+        return False
+    return database.modify_emp(emp_details[0], emp_details[1], emp_details[2],
+                                True, emp_details[4])
 
-def search_employee():
-    pass
+def search_employee(emp_num, database):
+    '''Searching through employee database for employee row'''
+    return database.search_emp(emp_num)
 
 def add_installer():
     pass
@@ -55,7 +61,6 @@ def search_job():
     pass
 
 '''
-2b- Inactivate employee
 3- Search an employee
 4- Add an installer
 5- Delete an installer
