@@ -31,9 +31,11 @@ class JobCollection():
                 self.database.close()
                 return True
             except ValueError:
+                logging.error("Date incorrect")
                 self.database.close()
                 return False
 
+        self.database.close()
         return False
 
     def add_job(self, job_num, ins_res, due_date):

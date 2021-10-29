@@ -57,8 +57,9 @@ def search_installer(res_id, database):
     '''Search for an installer in the installer table'''
     return database.search_ins(res_id)
 
-def add_job():
-    pass
+def add_job(job_num, ins_res, due_date, database):
+    '''Add a job to the job table'''
+    return database.add_job(job_num, ins_res, due_date)
 
 def search_job():
     pass
