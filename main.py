@@ -61,11 +61,14 @@ def add_job(job_num, ins_res, due_date, database):
     '''Add a job to the job table'''
     return database.add_job(job_num, ins_res, due_date)
 
-def search_job():
+def search_job(job_num, database):
+    '''Search for a single job in the job table'''
+    return database.search_job(job_num)
+
+def search_job_range():
     pass
 
 '''
-6- Search an installer
-7- Add a job
 8- Search a job
+9- Search jobs by dates
 '''

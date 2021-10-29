@@ -114,18 +114,31 @@ class Job_Test(TestCase):
         '''Create database for each test'''
         ts.db_create()
         main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC)
-        main.add_installer(0, IC)
         IC.counter = 0
+        main.add_installer(0, IC)
 
     def test_ak_job_add(self):
         '''Adding a job to the job table'''
-        #self.assertTrue(main.add_job('123456-1-1', 0, '2021-10-31', JC))
+        self.assertTrue(main.add_job('123456-1-1', 0, '2021-10-31', JC))
         self.assertFalse(main.add_job('123456-1-1', 0, '2021-10-15', JC))
+
+    def test_al_job_ser(self):
+        '''Search for a single job in table'''
+        self.assertTrue(main.add_job('123456-1-1', 0, '2021-10-31', JC))
+        self.assertFalse(main.search_job('111111-1-1', JC))
+        results = main.search_job('123456-1-1', JC)
+        self.assertEqual(results[0], '123456-1-1')
+        self.assertIsInstance(results[1], ts.Installer)
+        self.assertEqual(results[2], '2021-10-31') 
+
+    def test_am_ser_jobs(self):
+        '''Search for a set of jobs between two dates'''
+        self.assertTrue(main.add_job('111111-1-1', 0, '2021-10-31', JC))
+        self.assertTrue(main.add_job('222222-2-2', 0, '2021-11-15', JC))
 
     def tearDown(self):
         ts.db_delete()
 
 '''
-7- Add a job
-8- Search a job
+9- Search jobs by dates
 '''
