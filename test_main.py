@@ -2,10 +2,8 @@
 Tests main's functionality to control employees, installers, jobs
 '''
 
-import os
 from unittest import TestCase
-from unittest.mock import Mock
-from unittest.mock import patch
+import peewee as pw
 
 import table_setup as ts
 import employees
@@ -13,27 +11,31 @@ import installers
 import jobs
 import main
 
-database = 'Install_Calendar.db'
-EC = main.init_employee_database(database)
-IC = main.init_installer_database(database)
-JC = main.init_job_database(database)
+DATABASE = 'Install_Calendar.db'
+EC = main.init_employee_database(DATABASE)
+IC = main.init_installer_database(DATABASE)
+JC = main.init_job_database(DATABASE)
 
 class DBTest(TestCase):
     '''Test initializing of the tables'''
 
     def test_aa_employee_init(self):
         '''Test initalizing employee table'''
-        self.assertIsInstance(main.init_employee_database(database), employees.EmployeeCollection)
+        self.assertIsInstance(
+            main.init_employee_database(DATABASE), employees.EmployeeCollection
+            )
 
     def test_ab_installer_init(self):
         '''Test initalizing installer table'''
-        self.assertIsInstance(main.init_installer_database(database), installers.InstallerCollection)
+        self.assertIsInstance(
+            main.init_installer_database(DATABASE), installers.InstallerCollection
+            )
 
     def test_ac_job_init(self):
         '''Test initializing job table'''
-        self.assertIsInstance(main.init_job_database(database), jobs.JobCollection)
+        self.assertIsInstance(main.init_job_database(DATABASE), jobs.JobCollection)
 
-class Emp_Test(TestCase):
+class EmpTest(TestCase):
     '''Test Employee functionality of main.py'''
     def setUp(self):
         '''Create database for each test'''
@@ -73,7 +75,7 @@ class Emp_Test(TestCase):
     def tearDown(self):
         ts.db_delete()
 
-class Ins_Test(TestCase):
+class InsTest(TestCase):
     '''Test Installer functionality of main.py'''
     def setUp(self):
         '''Create database for each test'''
@@ -108,7 +110,7 @@ class Ins_Test(TestCase):
     def tearDown(self):
         ts.db_delete()
 
-class Job_Test(TestCase):
+class JobTest(TestCase):
     '''Test Job functionality of main.py'''
     def setUp(self):
         '''Create database for each test'''
@@ -129,16 +131,15 @@ class Job_Test(TestCase):
         results = main.search_job('123456-1-1', JC)
         self.assertEqual(results[0], '123456-1-1')
         self.assertIsInstance(results[1], ts.Installer)
-        self.assertEqual(results[2], '2021-10-31') 
+        self.assertEqual(results[2], '2021-10-31')
 
-    # def test_am_ser_jobs(self):
-    #     '''Search for a set of jobs between two dates'''
-    #     self.assertTrue(main.add_job('111111-1-1', 0, '2021-10-31', JC))
-    #     self.assertTrue(main.add_job('222222-2-2', 0, '2021-11-15', JC))
+    def test_am_ser_jobs(self):
+        '''Search for a set of jobs between two dates'''
+        self.assertTrue(main.add_job('111111-1-1', 0, '2021-10-31', JC))
+        self.assertTrue(main.add_job('222222-2-2', 0, '2021-11-15', JC))
+        query = main.search_job_range('2021-10-01', '2022-01-01', JC)
+        self.assertEqual(len(query), 2)
+        self.assertIsInstance(query, pw.ModelSelect)
 
     def tearDown(self):
         ts.db_delete()
-
-'''
-9- Search jobs by dates
-'''

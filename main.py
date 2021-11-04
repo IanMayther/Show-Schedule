@@ -2,12 +2,12 @@
 Module to manage employees, installers, jobs
 '''
 
-import csv
-import pathlib
 import logging
 import employees
 import installers
 import jobs
+
+# pylint: disable=R0913
 
 def init_employee_database(database):
     '''Initialize an employee database'''
@@ -65,9 +65,6 @@ def search_job(job_num, database):
     '''Search for a single job in the job table'''
     return database.search_job(job_num)
 
-def search_job_range():
-    pass
-
-'''
-9- Search jobs by dates
-'''
+def search_job_range(date_1, date_2, database):
+    '''Return all of the jobs for a given date range'''
+    return database.job_dates(date_1, date_2)
