@@ -131,10 +131,10 @@ class Job_Test(TestCase):
         self.assertIsInstance(results[1], ts.Installer)
         self.assertEqual(results[2], '2021-10-31') 
 
-    def test_am_ser_jobs(self):
-        '''Search for a set of jobs between two dates'''
-        self.assertTrue(main.add_job('111111-1-1', 0, '2021-10-31', JC))
-        self.assertTrue(main.add_job('222222-2-2', 0, '2021-11-15', JC))
+    # def test_am_ser_jobs(self):
+    #     '''Search for a set of jobs between two dates'''
+    #     self.assertTrue(main.add_job('111111-1-1', 0, '2021-10-31', JC))
+    #     self.assertTrue(main.add_job('222222-2-2', 0, '2021-11-15', JC))
 
     def tearDown(self):
         ts.db_delete()

@@ -165,11 +165,49 @@ class JobTest(TestCase):
         self.assertTrue(job_table.delete_job('123456-1-1'))
         self.assertFalse(job_table.delete_job('123456-1-1'))
 
-    def test_an_searhc_jobs(self):
+    def test_an_search_jobs(self):
         '''Test searching for jobs in the table'''
         self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
         self.assertFalse(job_table.search_job('123456-2-1'))
         self.assertIsInstance(job_table.search_job('123456-1-1'), list)
 
     def tearDown(self):
+        '''Delete table'''
+        ts.db_delete()
+
+class SearchJob(TestCase):
+    '''Test job search functionality with a range of dates'''
+    def setUp(self):
+        '''Set up tables'''
+        ts.db_create()
+        emp_table.add_emp(0,'Tim','Timerson',False,'INSTALL')
+        ins_table.counter = 0
+        ins_table.add_ins(0)
+
+    def test_ao_jobs_search(self):
+        '''Test getting multiple jobs from a between 2 dates'''
+        self.assertTrue(job_table.add_job('111111-1-1', 0, '2021-10-15'))
+        self.assertTrue(job_table.add_job('222222-2-2', 0, '2021-12-23'))
+        query = job_table.job_dates('2021-10-01', '2021-11-01')
+        self.assertEqual(len(query), 1)
+        query = job_table.job_dates('2021-10-01', '2022-01-01')
+        self.assertEqual(len(query), 2)
+        query = job_table.job_dates('2021-10-16', '2021-12-22')
+        self.assertEqual(len(query), 0)
+        query = job_table.job_dates('2021-11-01', '2021-10-01')
+        self.assertEqual(len(query), 1)
+        job_num = 100000
+        counter = 0
+        while counter < 202:
+            job_num = job_num + counter
+            input_1 = str(job_num) + '-1-1'
+            job_table.add_job(input_1, 0, '2021-11-15')
+            counter += 1
+
+        query = job_table.job_dates('2021-11-01', '2021-12-01')
+        self.assertEqual(len(query), 200)
+
+
+    def tearDown(self):
+        '''Delete table'''
         ts.db_delete()

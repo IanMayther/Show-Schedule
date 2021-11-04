@@ -2,6 +2,7 @@
 CRUD File for Jobs
 '''
 
+import datetime
 import logging
 from datetime import date
 import peewee as pw
@@ -59,7 +60,6 @@ class JobCollection():
                 self.database.close()
                 return False
         return False
-
 
     def modify_job(self, job_num, ins_res, due_date):
         '''Modifying job op resource and due date'''
@@ -127,3 +127,29 @@ class JobCollection():
         logging.info('%s NOT found in Collection', job_num)
         self.database.close()
         return False
+
+    def job_dates(self, date_1, date_2):
+        '''
+        Return all the jobs between two dates, as list of peewee ModelObjects
+        '''
+        self.database.connect(reuse_if_open= True)
+
+        first_date = datetime.datetime.strptime(date_1, '%Y-%m-%d')
+        second_date = datetime.datetime.strptime(date_2, '%Y-%m-%d')
+        date_diff = first_date.date() - second_date.date()
+
+        if date_diff.days > 0:
+            first_date = date_2
+            second_date = date_1
+
+        query = (table_setup.JobOper
+            .select()
+            .where(
+                (table_setup.JobOper.DueDateOverride >= first_date) &
+                (table_setup.JobOper.DueDateOverride <= second_date)
+            )
+            .limit(200)
+        )
+
+        self.database.close()
+        return query

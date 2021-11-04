@@ -69,6 +69,5 @@ def search_job_range():
     pass
 
 '''
-8- Search a job
 9- Search jobs by dates
 '''
