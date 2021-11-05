@@ -3,6 +3,7 @@ CRUD File for employees
 '''
 
 import logging
+from typing import Counter
 import peewee as pw
 import table_setup
 
@@ -17,25 +18,35 @@ class EmployeeCollection():
 
     def __init__(self, employee_database):
         self.database = pw.SqliteDatabase(employee_database)
-        #Add Counter for Employee number
+        self.counter = 0
         logging.info("New Employee Table Created")
 
-    def validate_input(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):
+    def validate_input(self, emp_first, emp_last, emp_inactive, emp_depart):
         '''Validates if the inputs confirm to table requirements'''
-        if (emp_num <= 999999 and len(emp_first) <31 and
+        if (len(emp_first) <31 and
             len(emp_last) < 31 and isinstance(emp_inactive, bool) and len(emp_depart) < 11):
-            return True
+            self.database.connect(reuse_if_open=True)
+            query = table_setup.Employee.select().where(emp_inactive==False)
+            try:
+                emp = query.where(
+                    (table_setup.Employee.FirstName == emp_first) &
+                    (table_setup.Employee.LastName == emp_last) &
+                    (table_setup.Employee.Department == emp_depart)
+                ).get()
+            except table_setup.Employee.DoesNotExist:
+                self.database.close()
+                return True
 
         return False
 
-    def add_emp(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):
+    def add_emp(self, emp_first, emp_last, emp_inactive, emp_depart):
         '''Creating a new employee record'''
-        if self.validate_input(emp_num, emp_first, emp_last, emp_inactive, emp_depart):
+        if self.validate_input(emp_first, emp_last, emp_inactive, emp_depart):
             self.database.connect(reuse_if_open=True)
             try:
                 with self.database.transaction():
                     new_employee = table_setup.Employee.create(
-                        EmployeeNum = emp_num,
+                        EmployeeNum = self.counter,
                         FirstName = emp_first,
                         LastName = emp_last,
                         Inactive = emp_inactive,
@@ -44,6 +55,7 @@ class EmployeeCollection():
                     new_employee.save()
                 self.database.close()
                 logging.info("Employee: %s created", emp_first)
+                self.counter += 1
                 return True
             except pw.IntegrityError:
                 logging.error("Failed to create Employee: %s", emp_first)

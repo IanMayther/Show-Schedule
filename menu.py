@@ -6,6 +6,11 @@ import logging
 import main
 import table_setup as ts
 
+ts.db_create()
+DATABASE = 'Install_Calendar.db'
+EC = main.init_employee_database(DATABASE)
+IC = main.init_installer_database(DATABASE)
+JC = main.init_job_database(DATABASE)
 
 EmployeeNames = [
         [0, 'Ian', 'Ianerson', False, 'ENG'],
@@ -51,7 +56,7 @@ def add_employee():
     Adds a new employee into the database
     emp_num, emp_first, emp_last, emp_inactive, emp_depart, database
     '''
-    emp_num = input('Employee #: ') #must be int
+    emp_num = input('Employee #: ')
     emp_first = input('First Name: ')
     emp_last = input('Last Name: ')
     emp_depart = input('Employee Department: ')

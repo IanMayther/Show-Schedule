@@ -38,13 +38,13 @@ class EmployeeTest(TestCase):
 
     def test_aa_val_input(self):
         '''Test the validity of input info'''
-        self.assertTrue(emp_table.validate_input(0,'Ian','Igor',False,'ENG'))
-        self.assertFalse(emp_table.validate_input(1234567,'Ian','Igor',False,'ENG'))
-        self.assertFalse(emp_table.validate_input(0,'IanIanIanIanIanIanIanIanIanIanI',
+        self.assertTrue(emp_table.validate_input('Ian','Igor',False,'ENG'))
+        self.assertFalse(emp_table.validate_input('Ian','Igor',False,'ENG'))
+        self.assertFalse(emp_table.validate_input('IanIanIanIanIanIanIanIanIanIanI',
                                             'Igor',False,'ENG'))
-        self.assertFalse(emp_table.validate_input(0,'Ian', 'IgorIgorIgorIgorIgorIgorIgorIgor',
+        self.assertFalse(emp_table.validate_input('Ian', 'IgorIgorIgorIgorIgorIgorIgorIgor',
                                             False,'ENG'))
-        self.assertFalse(emp_table.validate_input(0,'Ian','Igor',False,'Engineering'))
+        self.assertFalse(emp_table.validate_input('Ian','Igor',False,'Engineering'))
 
     def test_ab_add_emp(self):
         '''Add an employee to the table'''
