@@ -26,27 +26,6 @@ FILE_NAME = 'Install_Calendar.db'
 
 db = pw.SqliteDatabase(FILE_NAME)
 
-employee_names = [
-        [0, 'Ian', 'Ianerson', False, 'ENG'],
-        [0, 'Tim', 'Timerson', False, 'INSTALL'],
-        [0, 'Ken', 'Kenerson', False, 'INSTALL'],
-        [0, 'Paul', 'Paulerson', False, 'INSTALL'],
-        [0, 'Russell', 'Russellson', True, 'INSTALL'],
-        [0, 'Alex', 'Alexson', False, 'SALES'],
-        [0, 'Darrell', 'Darrellson', False, 'INSTALL']
-    ]
-
-JobBacklog = [
-        ['123456-1-1', 0, '2021-10-15'],
-        ['234567-1-1', 1, '2021-10-15'],
-        ['345678-1-1', 2, '2021-10-14'],
-        ['456789-1-1', 2, '2021-10-13'],
-        ['890123-1-1', 3, '2021-10-13'],
-        ['567890-1-1', 0, '2021-10-20'],
-        ['678901-1-1', 1, '2021-10-27'],
-        ['789012-1-1', 3, '2021-10-20']
-    ]
-
 class BaseModel(pw.Model):
     '''
     Base Model for all tables in the Install_Calendar.db
