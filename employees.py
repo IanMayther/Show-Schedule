@@ -3,13 +3,13 @@ CRUD File for employees
 '''
 
 import logging
-from typing import Counter
 import peewee as pw
 import table_setup
 
 # pylint: disable=R0913
 # pylint: disable=R0201
 # pylint: disable=E1120
+# pylint: disable=E1101
 
 class EmployeeCollection():
     '''
@@ -26,13 +26,15 @@ class EmployeeCollection():
         if (len(emp_first) <31 and
             len(emp_last) < 31 and isinstance(emp_inactive, bool) and len(emp_depart) < 11):
             self.database.connect(reuse_if_open=True)
-            query = table_setup.Employee.select().where(emp_inactive==False)
+            query = table_setup.Employee.select().where(emp_inactive is False)
             try:
-                emp = query.where(
+                query.where(
                     (table_setup.Employee.FirstName == emp_first) &
                     (table_setup.Employee.LastName == emp_last) &
                     (table_setup.Employee.Department == emp_depart)
                 ).get()
+                self.database.close()
+                return False
             except table_setup.Employee.DoesNotExist:
                 self.database.close()
                 return True
@@ -53,25 +55,23 @@ class EmployeeCollection():
                         Department = emp_depart
                     )
                     new_employee.save()
-                self.database.close()
                 logging.info("Employee: %s created", emp_first)
                 self.counter += 1
                 return True
-            except pw.IntegrityError:
-                logging.error("Failed to create Employee: %s", emp_first)
-                logging.info(pw.IntegrityError)
+            finally:
                 self.database.close()
-                return False
 
         return False
 
     def modify_emp(self, emp_num, emp_first, emp_last, emp_inactive, emp_depart):
         '''Updating an employee record'''
-        if self.validate_input(emp_num, emp_first, emp_last, emp_inactive, emp_depart):
-            self.database.connect(reuse_if_open=True)
-            try:
-                if table_setup.Employee.get_or_none(EmployeeNum = emp_num):
-                    with self.database.transaction():
+        self.database.connect(reuse_if_open=True)
+        try:
+            if table_setup.Employee.get_or_none(EmployeeNum = emp_num):
+                with self.database.transaction():
+                    if (len(emp_first) < 31 and
+                        len(emp_last) < 31 and isinstance(emp_inactive, bool) and
+                        len(emp_depart) < 11):
                         mod_emp = table_setup.Employee.update(
                             EmployeeNum = emp_num,
                             FirstName = emp_first,
@@ -80,18 +80,16 @@ class EmployeeCollection():
                             Department = emp_depart
                         )
                         mod_emp.execute()
-                    self.database.close()
-                    logging.info('Data updated for Employee: %s', emp_num)
-                    return True
+                        logging.info('Data updated for Employee: %s', emp_num)
+                        return True
 
-                raise pw.IntegrityError
-            except pw.IntegrityError:
-                self.database.close()
-                logging.info('Error updating Employee: %s', emp_num)
-                logging.info(pw.IntegrityError)
-                return False
-
-        return False
+            raise pw.IntegrityError
+        except pw.IntegrityError:
+            logging.info('Error updating Employee: %s', emp_num)
+            logging.info(pw.IntegrityError)
+            return False
+        finally:
+            self.database.close()
 
     def delete_emp(self, emp_num):
         '''Deletes an existing employee'''

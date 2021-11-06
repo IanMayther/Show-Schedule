@@ -40,29 +40,30 @@ class EmpTest(TestCase):
     def setUp(self):
         '''Create database for each test'''
         ts.db_create()
+        EC.counter = 0
 
     def test_ad_add_emp(self):
         '''Test adding employee to an existing collection'''
-        self.assertTrue(main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC))
-        self.assertFalse(main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC))
+        self.assertTrue(main.add_employee('Ian', 'Ianson', False, 'ENG', EC))
+        self.assertFalse(main.add_employee('Ian', 'Ianson', False, 'ENG', EC))
 
     def test_ae_modify_emp(self):
         '''Test modifying information for an employee'''
-        main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC)
+        main.add_employee('Ian', 'Ianson', False, 'ENG', EC)
         self.assertTrue(main.modify_employee(0, 'Ted', 'Tederson', False, 'INSTALL', EC))
         self.assertFalse(main.modify_employee(0, 'Ted', 'Tederson', True, 'INSTALL', EC))
         self.assertFalse(main.modify_employee(1, 'Ted', 'Tederson', False, 'INSTALL', EC))
 
     def test_af_inactivate_emp(self):
         '''Test inactivating an employee'''
-        main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC)
+        main.add_employee('Ian', 'Ianson', False, 'ENG', EC)
         self.assertTrue(main.inactivate_employee(0, EC))
         self.assertFalse(main.inactivate_employee(1, EC))
         self.assertFalse(main.inactivate_employee(0, EC))
 
     def test_ag_search_emp(self):
         '''Test searching for an employee'''
-        main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC)
+        main.add_employee('Ian', 'Ianson', False, 'ENG', EC)
         self.assertIsInstance(main.search_employee(0, EC), list)
         results = main.search_employee(0, EC)
         self.assertEqual(results[0], 0)
@@ -80,7 +81,8 @@ class InsTest(TestCase):
     def setUp(self):
         '''Create database for each test'''
         ts.db_create()
-        main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC)
+        EC.counter = 0
+        main.add_employee('Ian', 'Ianson', False, 'ENG', EC)
         IC.counter = 0
 
     def test_ah_add_ins(self):
@@ -115,7 +117,8 @@ class JobTest(TestCase):
     def setUp(self):
         '''Create database for each test'''
         ts.db_create()
-        main.add_employee(0, 'Ian', 'Ianson', False, 'ENG', EC)
+        EC.counter = 0
+        main.add_employee('Ian', 'Ianson', False, 'ENG', EC)
         IC.counter = 0
         main.add_installer(0, IC)
 

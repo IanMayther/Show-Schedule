@@ -35,11 +35,11 @@ class EmployeeTest(TestCase):
     def setUp(self):
         '''Set up tables'''
         ts.db_create()
+        emp_table.counter = 0
 
     def test_aa_val_input(self):
         '''Test the validity of input info'''
         self.assertTrue(emp_table.validate_input('Ian','Igor',False,'ENG'))
-        self.assertFalse(emp_table.validate_input('Ian','Igor',False,'ENG'))
         self.assertFalse(emp_table.validate_input('IanIanIanIanIanIanIanIanIanIanI',
                                             'Igor',False,'ENG'))
         self.assertFalse(emp_table.validate_input('Ian', 'IgorIgorIgorIgorIgorIgorIgorIgor',
@@ -48,14 +48,16 @@ class EmployeeTest(TestCase):
 
     def test_ab_add_emp(self):
         '''Add an employee to the table'''
-        self.assertTrue(emp_table.add_emp(0,'Ian','Igor',False,'ENG'))
-        self.assertFalse(emp_table.add_emp(0,'Ian','Igor',False,'ENG'))
-        self.assertFalse(emp_table.add_emp(1,'Ian', 'IgorIgorIgorIgorIgorIgorIgorIgor',
+        self.assertTrue(emp_table.add_emp('Ian','Igor',False,'ENG'))
+        self.assertFalse(emp_table.add_emp('Ian','Igor',False,'ENG'))
+        self.assertFalse(emp_table.add_emp('Ian', 'IgorIgorIgorIgorIgorIgorIgorIgor',
                                     False,'ENG'))
+        emp_table.counter = 0
+        self.assertFalse(emp_table.add_emp('Ian','Igor',False,'ENG'))
 
     def test_ac_modify_emp(self):
         '''Modify an employee'''
-        emp_table.add_emp(0,'Ian','Igor',False,'ENG')
+        emp_table.add_emp('Ian','Igor',False,'ENG')
         self.assertTrue(emp_table.modify_emp(0,'Ivan','Olmanov',False,'METAL'))
         self.assertFalse(emp_table.modify_emp(15,'Ivan','Olmanov',False,'METAL'))
         self.assertTrue(emp_table.modify_emp(0,'Ivan','Olmanov',True,'METAL'))
@@ -64,13 +66,13 @@ class EmployeeTest(TestCase):
 
     def test_ad_delete_emp(self):
         '''Delete an employee'''
-        emp_table.add_emp(0,'Ian','Igor',False,'ENG')
+        emp_table.add_emp('Ian','Igor',False,'ENG')
         self.assertTrue(emp_table.delete_emp(0))
         self.assertFalse(emp_table.delete_emp(0))
 
     def test_ae_search_emp(self):
         '''Search for an employee'''
-        emp_table.add_emp(0,'Ian','Igor',False,'ENG')
+        emp_table.add_emp('Ian','Igor',False,'ENG')
         self.assertIsInstance(emp_table.search_emp(0), list)
         answer = emp_table.search_emp(0)
         self.assertEqual(answer[0],0)
@@ -91,7 +93,8 @@ class InstallerTest(TestCase):
     def setUp(self):
         '''Set up tables'''
         ts.db_create()
-        emp_table.add_emp(0,'Tim','Timerson',False,'INSTALL')
+        emp_table.counter = 0
+        emp_table.add_emp('Tim','Timerson',False,'INSTALL')
         ins_table.counter = 0
 
     def test_af_val_inputs(self):
@@ -132,7 +135,8 @@ class JobTest(TestCase):
     def setUp(self):
         '''Set up tables'''
         ts.db_create()
-        emp_table.add_emp(0,'Tim','Timerson',False,'INSTALL')
+        emp_table.counter = 0
+        emp_table.add_emp('Tim','Timerson',False,'INSTALL')
         ins_table.counter = 0
         ins_table.add_ins(0)
 
@@ -155,7 +159,7 @@ class JobTest(TestCase):
         self.assertFalse(job_table.modify_job('123456-1-1', 1, '2021-10-15'))
         self.assertFalse(job_table.modify_job('123456-1-2', 0, '2021-10-25'))
         self.assertTrue(job_table.modify_job('123456-1-1', 0, '2021-10-25'))
-        emp_table.add_emp(1, 'Ken', 'Kenerson', False, 'INSTALL')
+        emp_table.add_emp('Ken', 'Kenerson', False, 'INSTALL')
         ins_table.add_ins(1)
         self.assertTrue(job_table.modify_job('123456-1-1', 1, '2021-10-25'))
 
@@ -180,7 +184,8 @@ class SearchJob(TestCase):
     def setUp(self):
         '''Set up tables'''
         ts.db_create()
-        emp_table.add_emp(0,'Tim','Timerson',False,'INSTALL')
+        emp_table.counter = 0
+        emp_table.add_emp('Tim','Timerson',False,'INSTALL')
         ins_table.counter = 0
         ins_table.add_ins(0)
 

@@ -21,9 +21,9 @@ def init_job_database(database):
     '''Initialize an job database'''
     return jobs.JobCollection(database)
 
-def add_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, database):
+def add_employee(emp_first, emp_last, emp_inactive, emp_depart, database):
     '''Add an employee to the database'''
-    return database.add_emp(emp_num, emp_first, emp_last, emp_inactive, emp_depart)
+    return database.add_emp(emp_first, emp_last, emp_inactive, emp_depart)
 
 def modify_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, database):
     '''Modify the information for an existing employee, except inactivate'''
