@@ -87,7 +87,17 @@ def search_employee():
     '''
     Searches an employee in the database
     '''
-    pass
+    emp_num = input('Employee #: ')
+    emp_search = main.search_employee(emp_num, EC)
+    if not emp_search:
+        print('Could NOT find Employee')
+        return False
+
+    print('Employee #: ', emp_search[0])
+    print('First Name: ', emp_search[1])
+    print('Last Name: ', emp_search[2])
+    print('Employee Department: ', emp_search[4])
+    return True
 
 def inactivate_employee():
     '''

@@ -38,6 +38,15 @@ class MainTest(TestCase):
         with patch('menu.main.modify_employee', return_value=False):
             self.assertFalse(menu.modify_employee())
     
+    def test_af_search_employee(self):
+        '''Test Searching for an employee in menu'''
+        menu.input = Mock(return_value=[0])
+        with patch('menu.main.search_employee', return_value=[0, 'Ian', 'Ianson', False, 'ENG']):
+            self.assertTrue(menu.search_employee())
+
+        with patch('menu.main.search_employee', return_value=False):
+            self.assertFalse(menu.search_employee())
+
     def test_aq_quit(self):
         '''Test quitting in the menu'''
         with self.assertRaises(SystemExit):
