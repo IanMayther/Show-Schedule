@@ -56,11 +56,10 @@ def add_employee():
     Adds a new employee into the database
     emp_num, emp_first, emp_last, emp_inactive, emp_depart, database
     '''
-    emp_num = input('Employee #: ')
     emp_first = input('First Name: ')
     emp_last = input('Last Name: ')
     emp_depart = input('Employee Department: ')
-    emp_add = main.add_employee(emp_num, emp_first, emp_last, False, emp_depart, EC)
+    emp_add = main.add_employee(emp_first, emp_last, False, emp_depart, EC)
     if not emp_add:
         print('Error occured in adding Employee')
         return False
@@ -68,11 +67,21 @@ def add_employee():
     print('Employee Successfully Added!')
     return True
 
-def update_employee():
+def modify_employee():
     '''
     Updates information for an existing employee
     '''
-    pass
+    emp_num = input('Employee #: ')
+    emp_first = input('First Name: ')
+    emp_last = input('Last Name: ')
+    emp_depart = input('Employee Department: ')
+    emp_mod = main.modify_employee(emp_num, emp_first, emp_last, False, emp_depart, EC)
+    if not emp_mod:
+        print('Error occured in modifying Employee')
+        return False
+
+    print('Employee Successfully Modified!')
+    return True
 
 def search_employee():
     '''
@@ -136,7 +145,7 @@ if __name__ == '__main__':
         'B': load_installers,
         'C': load_jobs,
         'D': add_employee,
-        'E': update_employee,
+        'E': modify_employee,
         'F': search_employee,
         'G': inactivate_employee,
         'H': add_job,
@@ -152,11 +161,11 @@ if __name__ == '__main__':
                             B: Load Installers into database
                             C: Load Jobs into database
                             D: Add Employee
-                            E: Update Employee
+                            E: Modify Employee
                             F: Search Employee
                             G: Inactivate Employee
                             H: Add Job
-                            I: Update Job
+                            I: Modify Job
                             J: Search Job
                             K: Search Job by Range
                             L: Add Installer
