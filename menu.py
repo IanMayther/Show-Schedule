@@ -103,7 +103,14 @@ def inactivate_employee():
     '''
     Inactivate an employee
     '''
-    pass
+    emp_num = input("Employee # to Inactivate: ")
+    emp_ina = main.inactivate_employee(emp_num, EC)
+    if not emp_ina:
+        print('Error inactivating Employee #', emp_num)
+        return False
+
+    print('Inactivated Employee #', emp_num)
+    return True
 
 def add_installer():
     '''
@@ -114,7 +121,16 @@ def add_job():
     '''
     Adds a new job into the database
     '''
-    pass
+    job_num = input('Job Number to add: ')
+    ins_res = input('Assign Install Resource: ')
+    due_date = input('Date to complete Job:')
+    job_add = main.add_job(job_num, ins_res, due_date, JC)
+    if not job_add:
+        print('Error adding Job: ', job_num)
+        return False
+
+    print('Added Job: ', job_num)
+    return True
 
 def update_job():
     '''
