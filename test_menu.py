@@ -90,6 +90,7 @@ class MainTest(TestCase):
             menu.quit_program()
 
 """
+
 A: Load Employees into database
 B: Load Installers into database
 C: Load Jobs into database
