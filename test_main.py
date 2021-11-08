@@ -144,5 +144,11 @@ class JobTest(TestCase):
         self.assertEqual(len(query), 2)
         self.assertIsInstance(query, pw.ModelSelect)
 
+    def test_an_modfy_job(self):
+        '''Test modifying a job in the table'''
+        self.assertTrue(main.add_job('111111-1-1', 0, '2021-10-31', JC))
+        self.assertTrue(main.modify_job('111111-1-1', 0, '2021-11-01', JC))
+        self.assertFalse(main.modify_job('111112-1-1', 0, '2021-10-31', JC))
+
     def tearDown(self):
         ts.db_delete()

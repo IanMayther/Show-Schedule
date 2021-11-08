@@ -66,18 +66,33 @@ class MainTest(TestCase):
         with patch('menu.main.add_job', return_value= False):
             self.assertFalse(menu.add_job())
 
+    def test_ai_modify_job(self):
+        '''Test modifying a job in menu'''
+        mock.input = Mock(return_value= ['123456-1-1', 0, '2021-11-25'])
+        with patch('menu.main.modify_job', return_value= True):
+            self.assertTrue(menu.modify_job())
+
+        with patch('menu.main.add_job', return_value= False):
+            self.assertFalse(menu.modify_job())
+
+    def test_aj_search_job(self):
+        '''Test searching a job in menu'''
+        mock.input = Mock(return_value= ['123456-1-1'])
+        with patch('menu.main.search_job', return_value= ['123456-1-1', 0, '2021-11-25']):
+            self.assertTrue(menu.search_job())
+
+        with patch('menu.main.search_job', return_value= False):
+            self.assertFalse(menu.search_job())
+
     def test_aq_quit(self):
         '''Test quitting in the menu'''
         with self.assertRaises(SystemExit):
             menu.quit_program()
 
 """
-add_employee(emp_num, emp_first, emp_last, emp_inactive, emp_depart, database):
 A: Load Employees into database
 B: Load Installers into database
 C: Load Jobs into database
-I: Update Job
-J: Search Job
 K: Search Job by Range
 L: Add Installer
 """

@@ -132,17 +132,35 @@ def add_job():
     print('Added Job: ', job_num)
     return True
 
-def update_job():
+def modify_job():
     '''
     Updates information for an existing job
     '''
-    pass
+    job_num = input('Job Number to modify: ')
+    ins_res = input('Assign Install Resource: ')
+    due_date = input('Date to complete Job:')
+    job_mod = main.modify_job(job_num, ins_res, due_date, JC)
+    if not job_mod:
+        print('Error modifying Job: ', job_num)
+        return False
+
+    print('Modified Job: ', job_num)
+    return True
 
 def search_job():
     '''
     Searches a job in the database
     '''
-    pass
+    job_num = input('Job #: ')
+    job_search = main.search_job(job_num, JC)
+    if not job_search:
+        print('Could NOT find Job')
+        return False
+
+    print('Job #: ', job_search[0])
+    print('Install Resource: ', job_search[1])
+    print('Due Date: ', job_search[2])
+    return True
 
 def job_range():
     '''
@@ -175,7 +193,7 @@ if __name__ == '__main__':
         'F': search_employee,
         'G': inactivate_employee,
         'H': add_job,
-        'I': update_job,
+        'I': modify_job,
         'J': search_job,
         'K': job_range,
         'L': add_installer,

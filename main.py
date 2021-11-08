@@ -61,6 +61,10 @@ def add_job(job_num, ins_res, due_date, database):
     '''Add a job to the job table'''
     return database.add_job(job_num, ins_res, due_date)
 
+def modify_job(job_num, ins_res, due_date, database):
+    '''Modify a job in the job table'''
+    return database.modify_job(job_num, ins_res, due_date)
+
 def search_job(job_num, database):
     '''Search for a single job in the job table'''
     return database.search_job(job_num)
