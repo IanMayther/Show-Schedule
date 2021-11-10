@@ -91,7 +91,7 @@ class MainTest(TestCase):
             ['123456-1-1', 0, '2021-11-17'], ['123457-1-1', 1, '2021-11-18']]):
             self.assertTrue(menu.job_range())
 
-        with patch('menu.main.search_job', return_value= None):
+        with patch('menu.main.search_job_range', return_value= None):
             self.assertFalse(menu.job_range())
 
     def test_aq_quit(self):
@@ -103,6 +103,5 @@ class MainTest(TestCase):
 A: Load Employees into database
 B: Load Installers into database
 C: Load Jobs into database
-K: Search Job by Range
 L: Add Installer
 """
