@@ -84,13 +84,22 @@ class MainTest(TestCase):
         with patch('menu.main.search_job', return_value= False):
             self.assertFalse(menu.search_job())
 
+    def test_ak_search_range(self):
+        '''Test searching jobs over a given range in menu'''
+        mock.input = Mock(return_value= ['2021-11-15', '2021-11-19'])
+        with patch('menu.main.search_job_range', return_value= [
+            ['123456-1-1', 0, '2021-11-17'], ['123457-1-1', 1, '2021-11-18']]):
+            self.assertTrue(menu.job_range())
+
+        with patch('menu.main.search_job', return_value= None):
+            self.assertFalse(menu.job_range())
+
     def test_aq_quit(self):
         '''Test quitting in the menu'''
         with self.assertRaises(SystemExit):
             menu.quit_program()
 
 """
-
 A: Load Employees into database
 B: Load Installers into database
 C: Load Jobs into database

@@ -166,7 +166,18 @@ def job_range():
     '''
     Return jobs from a given range
     '''
-    pass
+    date_1 = input('Start Date of Range: ')
+    date_2 = input('End Date of Range: ')
+    query = main.search_job_range(date_1, date_1, JC)
+    print(query)
+    if query is None:
+        print('No Jobs returned for that date range')
+        return False
+
+    for job in query:
+        print('Job #{} Due {} by {}'.format(job[0], job[2], job[1]))
+
+    return True
 
 def quit_program():
     '''
