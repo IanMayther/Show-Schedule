@@ -201,6 +201,8 @@ class SearchJob(TestCase):
         self.assertEqual(len(query), 0)
         query = job_table.job_dates('2021-11-01', '2021-10-01')
         self.assertEqual(len(query), 1)
+        query = job_table.job_dates('2021-12-25', '2022-01-01')   
+        self.assertFalse(query)        
         job_num = 100000
         counter = 0
         while counter < 202:
