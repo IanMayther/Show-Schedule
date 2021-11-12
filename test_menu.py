@@ -21,6 +21,30 @@ class MainTest(TestCase):
     '''
     Integration testing for menu.py
     '''
+    def test_aa_load_employees(self):
+        '''Testing batch loading Employees'''
+        with patch('menu.main.add_employee', return_value= True):
+            self.assertTrue(menu.load_employees())
+
+        with patch('menu.main.add_employee', return_value= False):
+            self.assertFalse(menu.load_employees())
+
+    def test_ab_load_installers(self):
+        '''Test batch loading of Installers'''
+        with patch('menu.main.add_installer', return_value = True):
+            self.assertTrue(menu.load_installers())
+
+        with patch('menu.main.add_installer', return_value = False):
+            self.assertFalse(menu.load_installers())
+
+    def test_ac_load_jobs(self):
+        '''Test batch loading of jobs'''
+        with patch('menu.main.add_job', return_value = True):
+            self.assertTrue(menu.load_jobs())
+
+        with patch('menu.main.add_job', return_value = False):
+            self.assertFalse(menu.load_jobs())
+
     def test_ad_add_employee(self):
         '''Test adding an employee in menu'''
         menu.input = Mock(return_value=['Ian', 'Ianson', False, 'ENG', EC])
@@ -109,8 +133,5 @@ class MainTest(TestCase):
             menu.quit_program()
 
 """
-A: Load Employees into database
-B: Load Installers into database
 C: Load Jobs into database
-L: Add Installer
 """

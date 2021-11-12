@@ -110,6 +110,9 @@ class InstallerTest(TestCase):
         self.assertEqual(ins_table.counter, 1)
         self.assertFalse(ins_table.add_ins(0))
         self.assertEqual(ins_table.counter, 1)
+        emp_table.add_emp('Dan','Wells',False,'INSTALL')
+        self.assertTrue(ins_table.add_ins(1))
+        self.assertEqual(ins_table.counter, 2)
 
     def test_ah_del_ins(self):
         '''Test deleting an installer out of the table'''

@@ -42,7 +42,7 @@ class InstallerCollection():
                     new_installer.save()
                 self.database.close()
                 logging.info("Install Resource: %s created", emp_num)
-                self.counter =+ 1
+                self.counter = self.counter + 1
                 return True
             except pw.IntegrityError:
                 logging.error("Failed to create Install Resource: %s", emp_num)

@@ -3,6 +3,7 @@ Provides a basic frontend
 '''
 import sys
 import logging
+from unittest.signals import installHandler
 import main
 import table_setup as ts
 
@@ -13,13 +14,13 @@ IC = main.init_installer_database(DATABASE)
 JC = main.init_job_database(DATABASE)
 
 EmployeeNames = [
-        [0, 'Ian', 'Ianerson', False, 'ENG'],
-        [0, 'Tim', 'Timerson', False, 'INSTALL'],
-        [0, 'Ken', 'Kenerson', False, 'INSTALL'],
-        [0, 'Paul', 'Paulerson', False, 'INSTALL'],
-        [0, 'Russell', 'Russellson', True, 'INSTALL'],
-        [0, 'Alex', 'Alexson', False, 'SALES'],
-        [0, 'Darrell', 'Darrellson', False, 'INSTALL']
+        ['Ian', 'Ianerson', False, 'ENG'],
+        ['Tim', 'Timerson', False, 'INSTALL'],
+        ['Ken', 'Kenerson', False, 'INSTALL'],
+        ['Paul', 'Paulerson', False, 'INSTALL'],
+        ['Russell', 'Russellson', True, 'INSTALL'],
+        ['Alex', 'Alexson', False, 'SALES'],
+        ['Darrell', 'Darrellson', False, 'INSTALL']
     ]
 
 JobBacklog = [
@@ -37,19 +38,47 @@ def load_employees():
     '''
     Loads employees from a list, prime the database
     '''
-    pass
+    try:
+        for item in EmployeeNames:
+            if not main.add_employee(item[0], item[1], item[2], item[3], EC):
+                raise Exception
+    except Exception:
+        print('Failed to Load Employees')
+        return False
+
+    print('All Employees Loaded')
+    return True
 
 def load_installers():
     '''
     Loads installers from a list, prime the database
     '''
-    pass
+    try:
+        installers = [1, 2, 3, 6]
+        for item in installers:
+            if not main.add_installer(item, IC):
+                raise Exception
+    except Exception:
+        print('Failed to Load Installers')
+        return False
+
+    print('All Installers Loaded')
+    return True
 
 def load_jobs():
     '''
     Loads jobs from a list, prime the database
     '''
-    pass
+    try:
+        for item in JobBacklog:
+            if not main.add_job(item[0], item[1], item[2], JC):
+                raise Exception
+    except Exception:
+        print('Failed to Load Jobs')
+        return False
+
+    print('All Jobs Loaded')
+    return True
 
 def add_employee():
     '''
