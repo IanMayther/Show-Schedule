@@ -94,6 +94,15 @@ class MainTest(TestCase):
         with patch('menu.main.search_job_range', return_value= None):
             self.assertFalse(menu.job_range())
 
+    def test_al_add_installer(self):
+        '''Test adding an install resource'''
+        mock.input = Mock(return_value= [0])
+        with patch('menu.main.add_installer', return_value = True):
+            self.assertTrue(menu.add_installer())
+
+        with patch('menu.main.add_installer', return_value = False):
+            self.assertFalse(menu.add_installer())
+
     def test_aq_quit(self):
         '''Test quitting in the menu'''
         with self.assertRaises(SystemExit):

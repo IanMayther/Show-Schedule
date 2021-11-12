@@ -116,6 +116,14 @@ def add_installer():
     '''
     Add an employee as an installer resource
     '''
+    emp_num = input('Which Employee to Install: ')
+    ins_res = main.add_installer(emp_num, IC)
+    if not ins_res:
+        print('Error Adding Install Resource')
+        return False
+
+    print('Employee added as Install Resource')
+    return True
 
 def add_job():
     '''
