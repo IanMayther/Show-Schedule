@@ -1,7 +1,5 @@
 '''Testing the menu interface for local CRUD'''
 
-import os
-from sys import path, path_hooks
 from unittest import TestCase
 from unittest import mock
 from unittest.mock import Mock
@@ -50,7 +48,7 @@ class MainTest(TestCase):
         menu.input = Mock(return_value=['Ian', 'Ianson', False, 'ENG', EC])
         with patch('menu.main.add_employee', return_value=True):
             self.assertTrue(menu.add_employee())
-        
+
         with patch('menu.main.add_employee', return_value=False):
             self.assertFalse(menu.add_employee())
 
@@ -62,7 +60,7 @@ class MainTest(TestCase):
 
         with patch('menu.main.modify_employee', return_value=False):
             self.assertFalse(menu.modify_employee())
-    
+
     def test_af_search_employee(self):
         '''Test Searching for an employee in menu'''
         menu.input = Mock(return_value=[0])
@@ -96,7 +94,7 @@ class MainTest(TestCase):
         with patch('menu.main.modify_job', return_value= True):
             self.assertTrue(menu.modify_job())
 
-        with patch('menu.main.add_job', return_value= False):
+        with patch('menu.main.modify_job', return_value= False):
             self.assertFalse(menu.modify_job())
 
     def test_aj_search_job(self):
@@ -111,8 +109,10 @@ class MainTest(TestCase):
     def test_ak_search_range(self):
         '''Test searching jobs over a given range in menu'''
         mock.input = Mock(return_value= ['2021-11-15', '2021-11-19'])
-        with patch('menu.main.search_job_range', return_value= [
-            ['123456-1-1', 0, '2021-11-17'], ['123457-1-1', 1, '2021-11-18']]):
+        with patch('menu.main.search_job_range') as mocked_get:
+            mocked_get.JobNum = '123456-1-1'
+            mocked_get.DueDateOverride = '2021-10-14'
+            mocked_get.ResourceID = 0
             self.assertTrue(menu.job_range())
 
         with patch('menu.main.search_job_range', return_value= None):
@@ -131,7 +131,3 @@ class MainTest(TestCase):
         '''Test quitting in the menu'''
         with self.assertRaises(SystemExit):
             menu.quit_program()
-
-"""
-C: Load Jobs into database
-"""

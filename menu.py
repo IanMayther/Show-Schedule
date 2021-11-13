@@ -3,9 +3,11 @@ Provides a basic frontend
 '''
 import sys
 import logging
-from unittest.signals import installHandler
 import main
 import table_setup as ts
+
+# pylint: disable=W0703
+# pylint: disable=E1133
 
 ts.db_create()
 DATABASE = 'Install_Calendar.db'
@@ -92,7 +94,7 @@ def add_employee():
     if not emp_add:
         print('Error occured in adding Employee')
         return False
-    
+
     print('Employee Successfully Added!')
     return True
 
@@ -205,14 +207,13 @@ def job_range():
     '''
     date_1 = input('Start Date of Range: ')
     date_2 = input('End Date of Range: ')
-    query = main.search_job_range(date_1, date_1, JC)
-    print(query)
+    query = main.search_job_range(date_1, date_2, JC)
     if query is None:
         print('No Jobs returned for that date range')
         return False
 
     for job in query:
-        print('Job #{} Due {} by {}'.format(job[0], job[2], job[1]))
+        print(f'Job #{job.JobNum} Due {job.DueDateOverride} by {job.ResourceID}')
 
     return True
 
