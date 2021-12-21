@@ -18,10 +18,15 @@ class Window(QWidget):
         self.setWindowTitle("Install Calendar")
         
         #Constants
-        self.DATABASE = main.init_job_database('Install_Calendar.db')
+        self.DATABASE = 'Install_Calendar.db'
+        self.job_database= main.init_job_database(self.DATABASE)
+        self.install_database = main.init_installer_database(self.DATABASE)
         self.WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         self.day_dict = self.reset_day_dict()
-        self.colors = ["#023be8", "#f90798", "#423a96", "#4aadfa", "#e6e704"]
+        self.colors = ["#005073","#107dac","#189ad3","#1ebbd7","#71c7ec"]
+        self.install_colors = ["#ff0000","#008000","#a52a2a","#800080","#ffff00",
+                                "a64d79","#728840","#fab666","#fda898","#034c52",
+                                "#cc0080","#1bc9b6","#d8b13a","#78c654","8e7cc3"]
 
         # Create a QGridLayout instance
         outerlayout = QVBoxLayout()
@@ -29,6 +34,7 @@ class Window(QWidget):
         row2 = QHBoxLayout()
         self.row3 = QHBoxLayout()
         self.b_layout = QGridLayout()
+        
         
         #Create Widgets
         self.view = QLabel()
@@ -160,7 +166,10 @@ class Window(QWidget):
     def clear_grid(self):
         for item in reversed(range(self.b_layout.count())):
             self.b_layout.itemAt(item).widget().setParent(None)
-            
+
+        for item in reversed(range(self.row3.count())):
+            self.row3.itemAt(item).widget().setParent(None)
+
         self.week_detail.clear()
 
     def get_jobs_week(self):
@@ -169,22 +178,25 @@ class Window(QWidget):
         date_2 = date_start + datetime.timedelta(days=5)
         query = main.search_job_range(datetime.datetime.strftime(date_1, "%Y-%m-%d"),
                                       datetime.datetime.strftime(date_2, "%Y-%m-%d"),
-                                      self.DATABASE)
+                                      self.job_database)
 
-        installers = []
+        installers = {}
         for item in query:
             if item.ResourceID not in installers:
-                installers.append(item.ResourceID)
-                
-        for installer in installers:
-            inst = self.installer_key(installer)
+                installers[item.ResourceID] = main.search_installer(item.ResourceID, self.install_database)
+                installers[item.ResourceID].append(self.random_color())
+
+        for key in installers:
+            inst = self.installer_key(installers[key])
             self.row3.addWidget(inst[0])
             self.row3.addWidget(inst[1])
 
         for item in query:
             self.day_dict[self.get_day_of_week(item.DueDateOverride)] +=1
+            temp_button = self.create_job_button(item.JobNum, item.DueDateOverride, installers[item.ResourceID][4])
+            temp_button.setStyleSheet("background-color: {}".format(installers[item.ResourceID][4]))
             self.b_layout.addWidget(
-                self.create_job_button(item.JobNum, item.DueDateOverride, item.ResourceID),
+                temp_button,
                 self.day_dict[self.get_day_of_week(item.DueDateOverride)],
                 int(datetime.datetime.strptime(item.DueDateOverride, "%Y-%m-%d").strftime('%w'))
             )
@@ -198,12 +210,13 @@ class Window(QWidget):
     def create_job_button(self, JobNum, DDO, Res_ID):
         '''Create the button's for each job, return button'''
         job_num = QPushButton(JobNum)
-        job_num.clicked.connect(lambda: self.job_button_click(JobNum, DDO))
+        job_num.clicked.connect(lambda: self.job_button_click(JobNum, DDO, Res_ID))
         return job_num
 
-    def job_button_click(self, JobNum, DDO):
+    def job_button_click(self, JobNum, DDO, Color):
         '''Set Text of Week_detail'''
         self.week_detail.clear()
+        self.week_detail.setStyleSheet("background-color: {}".format(Color))
         self.week_detail.setText("Job: {} \nDue Date: {} \nComments: ".format(JobNum, DDO))
 
     def get_jobs_month(self):
@@ -223,7 +236,7 @@ class Window(QWidget):
         day_1 = "{}-{}-01".format(year, month)
         day_x = "{}-{}-{}".format(year, month, last_day[1])
         
-        query = main.search_job_range(day_1, day_x, self.DATABASE)
+        query = main.search_job_range(day_1, day_x, self.job_database)
         
         for keys in self.day_dict:
             if int(keys) < int(self.get_day_of_week(day_1)):
@@ -292,17 +305,23 @@ class Window(QWidget):
 
         self.week_detail.setText(text)
 
-    def installer_key(self, Res_ID):
+    def installer_key(self, input_list):
         '''Create a label pair for installers, returns tuple of labels'''
-        color_block = "cb{}".format(Res_ID)
-        install_num = "inst{}".format(Res_ID)
+        color_block = "cb{}".format(input_list[0])
+        install_num = "{}".format(input_list[2])
         label_1 = QLabel(color_block)
-        ran_num = random.randint(0, 5)
-        bg_color = "background-color: {};".format(self.colors[ran_num])
+        bg_color = "background-color: {};".format(input_list[4])
         label_1.setStyleSheet(bg_color)
         label_1.setText("")
         label_2 = QLabel(install_num)
         return (label_1, label_2)
+
+    def random_color(self):
+        '''Generates a random color for installers, returns a string'''
+        hexadecimal = '#'+''.join([random.choice('ABCDEF56789') for i in range(6)])
+        if hexadecimal in self.colors:
+            self.random_color()
+        return "{}".format(hexadecimal)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
