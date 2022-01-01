@@ -16,6 +16,8 @@ class Window(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Install Calendar")
+        self.setFixedHeight(1500)
+        self.setFixedWidth(1900)
         
         #Constants
         self.DATABASE = 'Install_Calendar.db'
@@ -54,9 +56,13 @@ class Window(QWidget):
         self.view.setStyleSheet(
             "font-size: 35px;" + 
             "color: black;" +
-            "padding: 25px 0px;"
+            "padding: 25px 0px;" +
+            "margin: 10px 10px"
         )
         self.view.setText("View:")
+        self.view.resize(100,100)
+        self.view.setFixedSize(150,100)
+        self.view.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
         #Combo Box for time_frame
         self.time_frame.addItem("Month", [
@@ -64,6 +70,13 @@ class Window(QWidget):
             'July', 'August', 'September', 'October', 'November', 'December'])
         self.time_frame.addItem("Work Week", self.work_weeks())
         self.time_frame.activated.connect(self.tf_clicker)
+        self.time_frame.setStyleSheet(
+            "font-size: 35px;" + 
+            "color: black;" +
+            "padding: 0px 0px;" +
+            "margin: 0px 0px"
+        )
+        self.time_frame.setFixedSize(220, 50)
 
         #Combo Box for View Scope
         self.time_scope.addItem("Item Item Item", ['Item[0][0]', 'Item[0][1]'])
@@ -97,7 +110,7 @@ class Window(QWidget):
         #Display logo
         image = QPixmap("logo.png")
         self.logo.setPixmap(image)
-        self.logo.setAlignment(QtCore.Qt.AlignCenter)
+        self.logo.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.logo.setStyleSheet("margin-top: 100px;")
 
         #Calendar Setup
@@ -123,7 +136,7 @@ class Window(QWidget):
         outerlayout.addLayout(row1)
         outerlayout.addLayout(row2)
         outerlayout.addLayout(self.row3)
-        outerlayout.setContentsMargins(10,10,10,10)
+        outerlayout.setContentsMargins(40,40,40,40)
         self.setLayout(outerlayout)
 
     def reset_day_dict(self):
@@ -176,7 +189,7 @@ class Window(QWidget):
             self.row3.itemAt(item).widget().setParent(None)
 
         self.week_detail.clear()
-        self.week_detail.setStyleSheet("background-color: {}".format(self.colors[0]))
+        self.week_detail.setStyleSheet("background-color: {}".format(self.colors[2]))
 
     def get_jobs_week(self):
         date_start = datetime.datetime.strptime(self.time_scope.currentData(0), "%Y-%m-%d")
@@ -239,12 +252,12 @@ class Window(QWidget):
         
         for keys in self.day_dict:
             if int(keys) < int(self.get_day_of_week(day_1)):
-                self.day_dict[keys] += 1
                 self.b_layout.addWidget(
                     self.create_label(),
                     self.day_dict[keys],
                     int(keys),
                 )
+                self.day_dict[keys] += 1
 
         due_dates = [item.DueDateOverride for item in self.query]
 
@@ -258,10 +271,7 @@ class Window(QWidget):
             
             if target_date in due_dates:
                 text = "{} \n Job Due".format(x)
-                #job_list = [item.JobNum for item in self.query if target_date == item.DueDateOverride]
                 job_list = [item for item in self.query if target_date == item.DueDateOverride]
-
-                self.day_dict[self.get_day_of_week(target_date)] += 1
                 self.b_layout.addWidget(
                     self.create_day_button(x, job_list),
                     self.day_dict[self.get_day_of_week(target_date)],
@@ -271,12 +281,14 @@ class Window(QWidget):
                 text = "{} \n No Data".format(x)
                 label = QLabel(str(x))
                 label.setText(text)
-                self.day_dict[self.get_day_of_week(target_date)] += 1
+                label.setStyleSheet("border: 1px solid black;")
+                label.setAlignment(QtCore.Qt.AlignCenter)
                 self.b_layout.addWidget(
                     label,
                     self.day_dict[self.get_day_of_week(target_date)],
                     int(self.get_day_of_week(target_date))
                 )
+            self.day_dict[self.get_day_of_week(target_date)] += 1                
             x +=1
 
         self.b_layout.update()
@@ -286,12 +298,16 @@ class Window(QWidget):
     def create_label(self):
         '''Creates place holder labels, returns label'''
         place_holder = QLabel("No Data")
+        place_holder.setStyleSheet("border: 1px solid black;")
+        place_holder.setAlignment(QtCore.Qt.AlignCenter)
         return place_holder
 
     def create_day_button(self, day, jobs=list):
         '''Creates a button for jobs on same day, returns button'''
         text = "{} \n Job Due".format(day)
         button = QPushButton(text)
+        button.setStyleSheet("border: 1px solid black;")
+        button.setStyleSheet("background-color: {}".format(self.colors[2]))
         button.clicked.connect(lambda: self.day_button_click(day, jobs))
         return button
 
@@ -315,7 +331,6 @@ class Window(QWidget):
             job_num = QLabel(text)
             location = count + self.day_dict[8]
             self.b_layout.addWidget(job_num, location,8)
-            self.day_dict[8] += 1
             if job in self.query:
                 job_num.setStyleSheet("background-color: {}".format(self.installers[job.ResourceID][4]))
 
