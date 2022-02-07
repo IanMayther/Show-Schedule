@@ -37,7 +37,7 @@ class InstallerCollection():
                 with self.database.transaction():
                     new_installer = table_setup.Installer.create(
                         ResourceID = self.counter,
-                        InstallerName = emp_num
+                        InstallerName = emp_num,
                     )
                     new_installer.save()
                 self.database.close()

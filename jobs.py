@@ -19,14 +19,15 @@ class JobCollection():
         self.database = pw.SqliteDatabase(employee_database)
         logging.info("New Job Table Created")
 
-    def validate_input(self, job_num, ins_res, due_date):
+    def validate_input(self, job_num, ins_res, due_date, res_grp):
         '''
         Validate the inputs into the job table
         '''
         self.database.connect(reuse_if_open= True)
 
         if (len(job_num) < 11 and
-            table_setup.Installer.get_or_none(ResourceID = ins_res)):
+            table_setup.Installer.get_or_none(ResourceID = ins_res) and
+            res_grp[0:2] == "IN-"):
             try:
                 date(int(due_date[0:4]),int(due_date[5:7]),int(due_date[8:]))
                 self.database.close()
@@ -39,16 +40,18 @@ class JobCollection():
         self.database.close()
         return False
 
-    def add_job(self, job_num, ins_res, due_date):
+    def add_job(self, job_num, ins_res, due_date, res_grp, comm = ''):
         '''Add a job to the tables'''
-        if self.validate_input(job_num, ins_res, due_date):
+        if self.validate_input(job_num, ins_res, due_date, res_grp):
             self.database.connect(reuse_if_open=True)
             try:
                 with self.database.transaction():
                     new_job = table_setup.JobOper.create(
                         JobNum = job_num,
                         ResourceID = ins_res,
-                        DueDateOverride = due_date
+                        DueDateOverride = due_date,
+                        ResourceGrp = res_grp,
+                        CommentText = comm
                     )
                     new_job.save()
                 self.database.close()

@@ -145,23 +145,25 @@ class JobTest(TestCase):
 
     def test_aj_val_job(self):
         '''Test the validation of inputs'''
-        self.assertFalse(job_table.validate_input('12345678901', 0, '2021-10-15'))
-        self.assertFalse(job_table.validate_input('123456-1-1', 1, '2021-10-15'))
-        self.assertFalse(job_table.validate_input('123456-1-1', 0, 'boom'))
-        self.assertTrue(job_table.validate_input('123456-1-1', 0, '2021-10-15'))
+        self.assertFalse(job_table.validate_input('12345678901', 0, '2021-10-15', 'IN-Grphc'))
+        self.assertFalse(job_table.validate_input('123456-1-1', 1, '2021-10-15', 'IN-Grphc'))
+        self.assertFalse(job_table.validate_input('123456-1-1', 0, 'boom', 'IN-Grphc'))
+        self.assertFalse(job_table.validate_input('123456-1-1', 1, '2021-10-15', 'ON-Grphc'))
+        self.assertTrue(job_table.validate_input('123456-1-1', 0, '2021-10-15', 'IN-Grphc'))
 
     def test_ak_add_job(self):
         '''Test adding a job to the table'''
-        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
-        self.assertFalse(job_table.add_job('123456-1-1', 0, '2021-10-15'))
-        self.assertFalse(job_table.add_job('123456-1-1', 0, 'boom'))
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15', 'IN-Grphc', ''))
+        self.assertFalse(job_table.add_job('123456-1-1', 0, '2021-10-15', 'IN-Grphc', ''))
+        self.assertFalse(job_table.add_job('123456-1-1', 0, 'boom', 'IN-Grphc', ''))
+        self.assertFalse(job_table.add_job('123456-1-1', 0, 'boom', 'ON-Grphc', ''))
 
     def test_al_modify_job(self):
         '''Test modifying a job due date or resource in the tables'''
-        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
-        self.assertFalse(job_table.modify_job('123456-1-1', 1, '2021-10-15'))
-        self.assertFalse(job_table.modify_job('123456-1-2', 0, '2021-10-25'))
-        self.assertTrue(job_table.modify_job('123456-1-1', 0, '2021-10-25'))
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15', 'IN-Grphc'))
+        self.assertFalse(job_table.modify_job('123456-1-1', 1, '2021-10-15', 'IN-Grphc'))
+        self.assertFalse(job_table.modify_job('123456-1-2', 0, '2021-10-25', 'IN-Grphc'))
+        self.assertTrue(job_table.modify_job('123456-1-1', 0, '2021-10-25', 'IN-Awn'))
         emp_table.add_emp('Ken', 'Kenerson', False, 'INSTALL')
         ins_table.add_ins(1)
         self.assertTrue(job_table.modify_job('123456-1-1', 1, '2021-10-25'))

@@ -64,6 +64,8 @@ class JobOper(BaseModel):
         Installer, related_name = 'Installer_to_do_work', null = False
         )
     DueDateOverride = pw.DateField(formats = 'YYYY-MM-DD')
+    ResourceGrp = pw.CharField(max_length = 8, null = False)
+    CommentText = pw.CharField(max_length = 160, null = True)
 
 def db_create():
     '''Creates tables from classes'''
