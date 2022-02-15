@@ -27,7 +27,7 @@ class JobCollection():
 
         if (len(job_num) < 11 and
             table_setup.Installer.get_or_none(ResourceID = ins_res) and
-            res_grp[0:2] == "IN-"):
+            res_grp[0:3] == "IN-"):
             try:
                 date(int(due_date[0:4]),int(due_date[5:7]),int(due_date[8:]))
                 self.database.close()
@@ -64,9 +64,9 @@ class JobCollection():
                 return False
         return False
 
-    def modify_job(self, job_num, ins_res, due_date):
+    def modify_job(self, job_num, ins_res, due_date, res_grp, comm = ''):
         '''Modifying job op resource and due date'''
-        if self.validate_input(job_num, ins_res, due_date):
+        if self.validate_input(job_num, ins_res, due_date, res_grp):
             self.database.connect(reuse_if_open=True)
             try:
                 if table_setup.JobOper.get_or_none(JobNum = job_num):
@@ -74,7 +74,9 @@ class JobCollection():
                         mod_job = table_setup.JobOper.update(
                             JobNum = job_num,
                             ResourceID = ins_res,
-                            DueDateOverride = due_date
+                            DueDateOverride = due_date,
+                            ResourceGrp = res_grp,
+                            CommentText = comm
                         )
                         mod_job.execute()
                     self.database.close()

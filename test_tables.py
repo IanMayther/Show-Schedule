@@ -16,6 +16,9 @@ emp_table = EC('Install_Calendar.db')
 ins_table = IC('Install_Calendar.db')
 job_table = JC('Install_Calendar.db')
 
+comments_160 = "A string that is over 160 characters long, this is how long it would need to be.  Way longer than a note on subcontractors.  Way, way too many characters!  What"
+comments_161 = "A string that is over 160 characters long, this is how long it would need to be.  Way longer than a note on subcontractors.  Way, way too many characters!  What!"
+
 class DBTest(TestCase):
     '''Test basic functionality of database'''
     def test_a_create(self):
@@ -166,17 +169,17 @@ class JobTest(TestCase):
         self.assertTrue(job_table.modify_job('123456-1-1', 0, '2021-10-25', 'IN-Awn'))
         emp_table.add_emp('Ken', 'Kenerson', False, 'INSTALL')
         ins_table.add_ins(1)
-        self.assertTrue(job_table.modify_job('123456-1-1', 1, '2021-10-25'))
+        self.assertTrue(job_table.modify_job('123456-1-1', 1, '2021-10-25', 'IN-Awn'))
 
     def test_am_delete_jobs(self):
         '''Test deleting a job from the table'''
-        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15', 'IN-Awn', comments_160))
         self.assertTrue(job_table.delete_job('123456-1-1'))
         self.assertFalse(job_table.delete_job('123456-1-1'))
 
     def test_an_search_jobs(self):
         '''Test searching for jobs in the table'''
-        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15'))
+        self.assertTrue(job_table.add_job('123456-1-1', 0, '2021-10-15', 'IN-Awn'))
         self.assertFalse(job_table.search_job('123456-2-1'))
         self.assertIsInstance(job_table.search_job('123456-1-1'), list)
 
@@ -196,8 +199,8 @@ class SearchJob(TestCase):
 
     def test_ao_jobs_search(self):
         '''Test getting multiple jobs from a between 2 dates'''
-        self.assertTrue(job_table.add_job('111111-1-1', 0, '2021-10-15'))
-        self.assertTrue(job_table.add_job('222222-2-2', 0, '2021-12-23'))
+        self.assertTrue(job_table.add_job('111111-1-1', 0, '2021-10-15', 'IN-Awn'))
+        self.assertTrue(job_table.add_job('222222-2-2', 0, '2021-12-23', 'IN-Awn'))
         query = job_table.job_dates('2021-10-01', '2021-11-01')
         self.assertEqual(len(query), 1)
         query = job_table.job_dates('2021-10-01', '2022-01-01')
@@ -213,7 +216,7 @@ class SearchJob(TestCase):
         while counter < 202:
             job_num = job_num + counter
             input_1 = str(job_num) + '-1-1'
-            job_table.add_job(input_1, 0, '2021-11-15')
+            job_table.add_job(input_1, 0, '2021-11-15', 'IN-Awn')
             counter += 1
 
         query = job_table.job_dates('2021-11-01', '2021-12-01')
