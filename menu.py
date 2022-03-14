@@ -4,6 +4,7 @@ Provides a basic frontend
 import sys
 import logging
 import main
+import csv
 import table_setup as ts
 
 # pylint: disable=W0703
@@ -81,6 +82,18 @@ def load_jobs():
 
     print('All Jobs Loaded')
     return True
+
+def mass_jobs():
+    '''Load Jobs from existing .csv'''
+    try:
+        with open('Install Jobs--Modified.csv', newline='') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                print(row)
+    except:
+        print('Oops')
+    
+    return None
 
 def add_employee():
     '''
@@ -246,6 +259,7 @@ if __name__ == '__main__':
         'J': search_job,
         'K': job_range,
         'L': add_installer,
+        'M': mass_jobs,
         'Q': quit_program
     }
     while True:
@@ -263,6 +277,7 @@ if __name__ == '__main__':
                             K: Search Job by Range
                             L: Add Installer
                             Q: Quit
+                            M: Mass Load from File
                             Please enter your choice: """)
         if user_selection.upper() in menu_options:
             menu_options[user_selection.upper()]()

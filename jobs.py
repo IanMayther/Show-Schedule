@@ -156,8 +156,5 @@ class JobCollection():
             .limit(200)
         )
 
-        if query is None:
-            return False
-
         self.database.close()
         return query
