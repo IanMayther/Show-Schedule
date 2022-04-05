@@ -1,6 +1,7 @@
 '''
 Provides a basic frontend
 '''
+from sqlite3 import IntegrityError
 import sys
 import logging
 import main
@@ -89,11 +90,14 @@ def mass_jobs():
         with open('Install Jobs--Modified.csv', newline='') as f:
             reader = csv.reader(f)
             for row in reader:
-                print(row)
-    except:
-        print('Oops')
+                print(row[0])
+                #main.add_job(row[0], row[4], row[3], row[1], "row[5]", JC)
+    except IntegrityError:
+        print('Job Failed to load')
+    except UnicodeDecodeError:
+        print('Decode Error')
     
-    return None
+    return True
 
 def add_employee():
     '''
